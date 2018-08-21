@@ -13,11 +13,14 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^10.7.0",
+    "@types/request-promise": "^4.1.42",
     "nodemon": "^1.18.3",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "dataloader": "^1.4.0"
+    "dataloader": "^1.4.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   }
 }
