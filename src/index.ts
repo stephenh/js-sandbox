@@ -56,7 +56,7 @@ const QueryResolverImpl: QueryResolver = {
   },
 
   employers: () => {
-    return [{ key: "instance", value: { uuid: "1", name: "employer1" } }];
+    return [{ tag: "instance", value: { uuid: "1", name: "employer1" } }];
   }
 };
 
@@ -84,8 +84,8 @@ function fetchEmployee(uuid: string): Employee {
 
 // This is an example of a root that could be different things
 type EmployerRoot =
-  | { key: "uuid"; value: string }
-  | { key: "instance"; value: Employer };
+  | { tag: "uuid"; value: string }
+  | { tag: "instance"; value: Employer };
 
 // The code generated resolver contract
 type EmployerResolver = {
@@ -102,7 +102,7 @@ const EmployerResolverImpl: EmployerResolver = {
 };
 
 async function fetchEmployerIfNeeded(root: EmployerRoot): Promise<Employer> {
-  switch (root.key) {
+  switch (root.tag) {
     case "uuid":
       return { uuid: "1", name: `employer1` };
     case "instance":
