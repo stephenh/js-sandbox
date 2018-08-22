@@ -7,11 +7,17 @@ const typeDefs = gql`
     hello: String!
     helloAsync: String!
     employees: [Employee]
+    employers: [Employer]
   }
 
   type Employee {
     uuid: String!
     firstName: String
+  }
+
+  type Employer {
+    uuid: String!
+    name: String!
   }
 `;
 
@@ -21,11 +27,17 @@ type Employee = {
   firstName: string | null;
 };
 
+type Employer = {
+  uuid: string;
+  name: string;
+};
+
 // The code generated resolver contract
 type QueryResolver = {
   hello: () => string | Promise<string>;
   helloAsync: () => string | Promise<string>;
   employees: () => EmployeeRoot[] | Promise<EmployeeRoot[]>;
+  employers: () => EmployerRoot[] | Promise<EmployerRoot[]>;
 };
 
 // The hand-written implementation
@@ -41,6 +53,10 @@ const QueryResolverImpl: QueryResolver = {
   employees: () => {
     // pretend i got this list from some where
     return [1, 2, 3].map(id => id.toString());
+  },
+
+  employers: () => {
+    return [{ key: "instance", value: { uuid: "1", name: "employer1" } }];
   }
 };
 
@@ -61,14 +77,43 @@ const EmployeeResolverImpl: EmployeeResolver = {
   firstName: root => fetchEmployee(root).firstName
 };
 
-// i want these to be methods not dictionaries
+// I want this to be a private helper method inside the resolver impl, but its just a dictionary
 function fetchEmployee(uuid: string): Employee {
   return { uuid, firstName: `employee${uuid}` };
 }
 
+// This is an example of a root that could be different things
+type EmployerRoot =
+  | { key: "uuid"; value: string }
+  | { key: "instance"; value: Employer };
+
+// The code generated resolver contract
+type EmployerResolver = {
+  uuid: (root: EmployerRoot) => string | Promise<string>;
+
+  name: (root: EmployerRoot) => string | Promise<string>;
+};
+
+// The hand-written implementation
+const EmployerResolverImpl: EmployerResolver = {
+  uuid: root => fetchEmployerIfNeeded(root).then(root => root.uuid),
+
+  name: root => fetchEmployerIfNeeded(root).then(root => root.name)
+};
+
+function fetchEmployerIfNeeded(root: EmployerRoot): Promise<Employer> {
+  switch (root.key) {
+    case "uuid":
+      return Promise.resolve({ uuid: "1", name: `employer1` });
+    case "instance":
+      return Promise.resolve(root.value);
+  }
+}
+
 const resolvers: IResolvers = {
   Query: QueryResolverImpl,
-  Employee: EmployeeResolverImpl
+  Employee: EmployeeResolverImpl,
+  Employer: EmployerResolverImpl
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
