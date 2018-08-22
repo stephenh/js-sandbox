@@ -101,12 +101,12 @@ const EmployerResolverImpl: EmployerResolver = {
   name: root => fetchEmployerIfNeeded(root).then(root => root.name)
 };
 
-function fetchEmployerIfNeeded(root: EmployerRoot): Promise<Employer> {
+async function fetchEmployerIfNeeded(root: EmployerRoot): Promise<Employer> {
   switch (root.key) {
     case "uuid":
-      return Promise.resolve({ uuid: "1", name: `employer1` });
+      return { uuid: "1", name: `employer1` };
     case "instance":
-      return Promise.resolve(root.value);
+      return root.value;
   }
 }
 
