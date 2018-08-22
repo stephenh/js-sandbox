@@ -1,18 +1,36 @@
 import express from "express";
-import { ApolloServer, gql } from "apollo-server-express";
+import {
+  ApolloServer,
+  gql,
+  IResolvers,
+  IResolverObject
+} from "apollo-server-express";
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type Query {
     hello: String
+    helloAsync: String
   }
 `;
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => "Hello world!"
+type QueryResolver = {
+  hello: () => string | Promise<string>;
+  helloAsync: () => string | Promise<string>;
+};
+
+const QueryResolverImpl: QueryResolver = {
+  hello: () => {
+    return "Hello world!!";
+  },
+
+  helloAsync: () => {
+    return Promise.resolve("Hello async!!");
   }
+};
+
+const resolvers: IResolvers = {
+  Query: QueryResolverImpl
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
