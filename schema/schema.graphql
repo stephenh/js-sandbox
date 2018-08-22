@@ -1,0 +1,17 @@
+
+  type Query {
+    hello: String!
+    helloAsync: String!
+    employees: [Employee]
+    employers: [Employer]
+  }
+
+  type Employee {
+    uuid: String!
+    firstName: String
+  }
+
+  type Employer {
+    uuid: String!
+    name: String!
+  }
