@@ -1,12 +1,28 @@
-import rp from "request-promise";
-import { RequestError } from "request-promise/errors";
+import { Agent } from "https";
+import { Response } from "request";
+import rp, { Options } from "request-promise-native";
+import { RequestError } from "request-promise-native/errors";
 
-rp({ uri: "http://123.123.123.123", timeout: 2 })
-  .then(r => {
-    console.log(r);
+let agent = new Agent({ keepAlive: true, keepAliveMsecs: 1000 });
+
+let opts: Options = {
+  uri: "https://www.google.com",
+  time: true,
+  agent: agent,
+  timeout: 2000,
+  resolveWithFullResponse: true
+};
+
+rp(opts)
+  .then((r: Response) => {
+    console.log(r.timingPhases);
+    rp(opts).then((r: Response) => {
+      console.log(r.timingPhases);
+    });
   })
   .catch(e => {
     console.log("INSTANCEOF " + (e instanceof RequestError));
     console.log("INSTANCEOF " + e.cause.message);
-    console.log(e);
+    console.log(e.timingPhases);
+    // console.log(e);
   });
