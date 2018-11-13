@@ -12,12 +12,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/immutable": "^3.8.7",
     "@types/node": "^10.7.0",
     "nodemon": "^1.18.3",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "dataloader": "^1.4.0"
+    "dataloader": "^1.4.0",
+    "immutable": "^3.8.2"
   }
 }
